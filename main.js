@@ -45,11 +45,16 @@ function refreshCanvas() {
 
 function createSnake() {
   // Initiate snake
+  //var length = 4;
   snake = [];
   snake[0] = {
-    x: 10,
-    y: 1
+    x: box,
+    y: box
   };
+/*
+  for(var i = length; i>=0; i--){
+      snake.push({x: i, y:0});
+  }*/
 }
 
 // Create food
@@ -63,18 +68,35 @@ function createFood() {
 
 // Draw scene
 function drawScene() {
-  // Add your code here!
-  if (direction == "right") {
-    snake[0].x++;
-  } else if (direction == "left") {
-    snake[0].x--;
-  } else if (direction == "up") {
-    snake[0].y--;
-  } else if (direction == "down") {
-    snake[0].y++;
+  // Change the snake direction
+  if (direction === 'left') {
+    snake.unshift({
+      x: snake[0].x - 15,
+      y: snake[0].y
+    })
+    //Pop out the last cell of the snake
+    snake.pop();
+  } else if (direction === 'right') {
+    snake.unshift({
+      x: snake[0].x + 15,
+      y: snake[0].y
+    })
+    snake.pop();
+  } else if (direction === 'up') {
+    snake.unshift({
+      x: snake[0].x,
+      y: snake[0].y - 15
+    });
+    snake.pop();
+  } else if (direction === 'down') {
+    snake.unshift({
+      x: snake[0].x,
+      y: snake[0].y + 15
+    });
+    snake.pop();
   }
 
-  //Restart a game, when snake reached to the wall
+  //Restart a game, when snake reachs to the wall
   if (
     snake[0].x < 0 ||
     snake[0].y < 0 ||
@@ -84,6 +106,17 @@ function drawScene() {
     setupNewGame();
   }
 
+  //if snake eats food, create new food and snake gets longer
+  if((food.x == snake[0].x) && (food.y == snake[0].y)){
+      var tail = {
+          x: snake[0].x,
+          y: snake[0].y
+      }
+      //Put the tail as the first cell of the snake
+      snake.unshift(tail);
+      createFood();
+        
+  }
   refreshCanvas();
 }
 
